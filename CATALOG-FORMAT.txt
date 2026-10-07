@@ -1,0 +1,42 @@
+CATALOG IMPORT / CROPPING
+
+CSV columns: Reference,X,Y,Kind,Name,Id,Source
+X/Y are finite IMAGE PIXEL coordinates: X rightward, Y downward.
+Kind: Gems, Od, Metal Ore, Herbs, Trees, Berries, Vegetables, Shellfish,
+Hidden Cube Spots or Custom. Waypoint is a navigation step, not a resource.
+Internal legacy kinds are also accepted.
+Name/Id/Source are optional. An item Id need not be unique across its spawns;
+model planning assigns separate unique StopIds to individual candidate locations.
+
+Two reference choices:
+1. The exact profile reference ID (available in an exported route/profile/task):
+   X/Y are positions in the CURRENT cropped image. Bounds are its width/height.
+2. source-image:
+   X/Y are positions in the ORIGINAL imported picture before cropping. The app
+   keeps only points inside the profile crop and subtracts its top-left offset.
+
+Example: source picture 1200 x 900, selected crop (200,100)-(1000,700).
+A source point (250,150) becomes (50,50) in the 800 x 600 profile.
+A source point (1100,800) is outside and is discarded.
+Repeated crops retain offsets relative to the original source picture.
+
+CSV (illustrative values; NOT verified spawn locations):
+Reference,X,Y,Kind,Name,Id,Source
+source-image,250,150,Gems,Example gem,example,Your data
+
+JSON equivalent:
+{
+  "reference": "source-image",
+  "nodes": [
+    {"X": 250, "Y": 150, "Kind": "Gems", "Name": "Example gem", "Id": "example", "Source": "Your data"}
+  ]
+}
+
+Catalog.csv is an empty header template; supply verified rows before importing.
+All CSV rows must specify the same reference. Import replaces this profile's
+catalog, retaining routes. Catalog markers are not automatically all route stops;
+select them in Edit route. Limit: 10,000 catalog points; 1000 route stops.
+
+Questlog world coordinates are NOT image pixels unless independently transformed
+and verified. source-image does not perform world-to-image conversion or extract
+icons from a screenshot. This is an app import format, not a Questlog export format.

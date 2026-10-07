@@ -1,0 +1,46 @@
+AETHERROUTE — INCLUDED WORLDS AND DEVELOPER MAP TOOLS
+
+NORMAL USE
+Open Interactive maps and choose Altgard or Verteron. Terrain, typed
+resource positions, region polygons and bounds are already configured.
+Select resources and an area, then Create zone + edit route. The new profile
+keeps a clean terrain image for tracking and a separate typed catalog for
+the editor/model export. It appears in Interactive map zones.
+
+New zone / picture creates a separate picture profile from your screenshot.
+It appears in Picture zones. It does not attach a remote database.
+
+DEVELOPER MODE — OPTIONAL
+Settings > Developer mode reveals:
+- Import map pack: a configured .map.json combines image, coordinates and bounds.
+- Import image + database: choose a clean image and getMarkers/getRegions JSON,
+  then select the matching world. Cancel getRegions to omit region boundaries.
+- Map bounds / Import bounds JSON: configure a custom image's coordinate mapping.
+- Export map pack / Delete custom map: sharing and removal of custom entries.
+- Import custom catalog and editor Learn icon / Import icons.
+
+The normal world selector still lists previously imported custom worlds.
+Turning Developer mode off hides configuration tools without losing data.
+Included worlds are read-only; import a separate custom copy to edit bounds.
+Custom map deletion asks twice and does not remove saved zone profiles.
+
+BOUNDS
+Never use minimum/maximum resource coordinates as the image edges. Use the
+map image's actual coordinate configuration. Verified full Altgard and
+Verteron images automatically receive their supplied bounds. A different
+image or crop needs its own mapping.
+
+Bounds JSON format:
+{"world_id":"1010","world_bounds":[-408000,-408000,408000,408000],"flip_y":true}
+
+world_id must match the custom world. flip_y means world Y increases toward
+the image top. Unknown bounds keep resources unpositioned until configured.
+Inspect landmarks before using a custom map in the overlay.
+
+DATA AND SHARING
+Public bundled worlds are under maps/. Custom packs are stored locally in
+LOCALAPPDATA/Aion2RouteSync/map-library. Exporting a pack explicitly shares
+terrain and resource/region data. Private model prompts and account paths
+are omitted. Existing wayveil-map-v1 files are still accepted; new exports
+use aetherroute-map-v1. Resource glyphs are original app symbols, not copied
+Questlog sprites. Retain maps/NOTICE.txt with third-party map materials.

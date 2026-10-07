@@ -1,0 +1,22 @@
+{
+  "product": "AetherRoute",
+  "version": "0.9.0-rc6",
+  "kind": "Windows source release candidate",
+  "dependencies": {
+    "numpy": "2.3.5",
+    "opencv-python-headless": "5.0.0.93",
+    "Pillow": "12.3.0",
+    "mss": "10.2.0"
+  },
+  "bundled_user_maps": false,
+  "bundled_routes": false,
+  "bundled_third_party_icons": false,
+  "bundled_worlds": [
+    "Altgard",
+    "Verteron"
+  ],
+  "bundled_game_map_artwork": true,
+  "license": "MIT application; third-party map data/artwork retain their original rights",
+  "sponsor_panel": false,
+  "support_url": "https://ko-fi.com/juiceoverload"
+}

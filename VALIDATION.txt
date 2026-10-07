@@ -1,0 +1,78 @@
+AETHERROUTE 0.9.0-rc6 — VALIDATION
+
+Environment: Python 3.12/Linux, Tk on a virtual 1800 x 1200 display.
+Windows native API execution, installer compilation and actual game focus/
+tracking need Windows verification. Earlier overlay/minimap builds were
+reported working by the user; this is not a live-game test of RC6.
+
+CURRENT AUTOMATED CHECKS
+51 tests pass covering profile references across compression/metadata,
+legacy map aliases and wayveil-map-v1 imports, rejection of altered images,
+privacy and rollback, backup recovery, strict JSON/geometry and restart.
+Map/model checks cover world transforms, missing bounds, filters, crops,
+resource IDs, unrouted resource glyph exports, exact resource metadata,
+waypoints, response bounds/duplicates and old model-task compatibility.
+
+New workflow tests cover separate interactive/picture origins, source
+metadata through import/export/restart, inference of older profile origins
+without rewriting files, invalid-source rejection before saving, the stable
+pre-rename pixel namespace/data folder, preference persistence/failed saves,
+strict preferences and omitted unknown fields, supplied support destination,
+negative monitor coordinates and small-screen launcher placement.
+Native API contract tests check that launcher styles remain clickable and
+use no-activation flags, and absolute positioning accepts negative monitor
+coordinates. These mocks verify API arguments, not Windows behavior.
+Focus/lifetime tests cover game client bounds, hiding while unfocused or
+minimized, and returning to the desktop when the bound game closes.
+
+BUNDLED WORLDS
+Altgard: 2048 x 2048 image, 4063 resources/cubes, 72 regions.
+Verteron: 2048 x 2048 image, 4173 resources/cubes, 71 regions.
+Each uses its supplied bounds [-408000,-408000,408000,408000], with world Y
+increasing north. All resource positions are within their image. Automatic
+bounds require both the world ID and exact decoded-image pixel identity.
+Explicit bounds and unrecognized custom images retain their own mapping.
+Checks cover map-index paths/duplicates/metadata, file checksums and tamper
+rejection. Built-in packs are separate from editable local custom entries.
+
+GUI WORKFLOWS
+The actual controller and map/editor windows pass these checks:
+- Normal startup, default hidden Developer controls and included world picker.
+- Opening the map three times: complete, centered fit without pressing reset.
+- Resize while fitted, cursor-centered zoom and retaining a user's zoom.
+- Verteron selection, an actual area drag, profile creation, enlarged editor
+  and byte-identical tracking terrain; exact database typing without icons.
+- Clicking adjacent different-type resources retains the correct ID/type.
+- Empty-route image/JSON export still includes filtered resource glyphs.
+- Developer settings reveal/hide database, catalog and icon controls.
+- Coffee action opens only the supplied Ko-fi URL, tested with a browser mock.
+- Picture import/crop/manual and learned-icon typing with Developer mode off,
+  and separate saved-zone lists, preserving
+  previous profiles and routes; cropping an interactive zone keeps its origin.
+- Hiding/reopening through the bottom-right launcher restores child windows,
+  including repeated hide calls; dragging/resetting persists its position.
+- Disabling the launcher uses the taskbar path, restores child windows and
+  saves startup preferences; profiles reopen with their correct source.
+- Safe shutdown waits for the tracking worker.
+
+The same GUI script passes against the extracted public source ZIP. Map,
+editor, controller and launcher screenshots were visually inspected.
+Bundled --self-test passes without screen capture or user data, checking
+both real worlds and temporary profile/map/preferences round trips.
+Public packaging is checked for complete allowlisted files and SHA-256
+member hashes. Code compiles. GitHub funding uses the supplied username.
+
+RELEASE CONTENTS AND LIMITS
+The source package includes code/docs, two explicitly configured worlds,
+original glyphs/Welcome assets and dependency/runtime notices. Personal
+profiles, prompts, routes, screenshots, learned icons, raw upstream database
+exports and upstream JavaScript are excluded. The original copyright notice
+is retained; third-party map artwork/data keep their original rights.
+
+Runtime/build dependency locks and the existing pinned GitHub workflow are
+retained. No dependency update or fresh advisory audit was part of RC6.
+No Windows EXE was compiled here. BUILD.cmd and the GitHub Windows workflow
+build the unsigned installer and portable application. Before publishing,
+check clean-account install/upgrade, live game tracking/focus, launcher
+activation, minimized/moved windows, multiple monitors and DPI on Windows.
+See RELEASE.txt.

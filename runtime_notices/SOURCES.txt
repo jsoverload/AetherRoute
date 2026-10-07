@@ -1,0 +1,10 @@
+Tcl/Tk 8.6 fallback license notices, retrieved 2026-10-05 from the upstream
+Tcl/Tk project repositories:
+https://raw.githubusercontent.com/tcltk/tcl/core-8-6-branch/license.terms
+https://raw.githubusercontent.com/tcltk/tk/core-8-6-branch/license.terms
+
+The Windows builder prefers license.terms supplied by the installed runtime.
+These fallback notices apply only to Tcl and Tk reporting version 8.6.
+Python's installed LICENSE.txt and PyInstaller notices are collected at build
+ time. A missing Python notice or unsupported Tcl/Tk license family fails
+ the build rather than silently omitting the notices.

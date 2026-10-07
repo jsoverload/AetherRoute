@@ -1,0 +1,90 @@
+AETHERROUTE - TECHNICAL GUIDE
+
+PROFILES AND COORDINATES
+Each zone owns a reference picture, crop/source-image metadata, catalog,
+saved routes and overlay preferences. Nodes use pixels in that reference,
+not Aion 2 world coordinates. Cropping creates another saved profile and
+translates catalog coordinates; the previous profile remains available.
+
+Profile exports share the map and routes together. Route-only imports
+require the same reference. Recent legacy profiles remain supported; old
+EXIF-dependent image hashes are accepted and normalized on profile export.
+Custom prompts stay local. Model packs intentionally include the chosen
+prompt and annotated map.png for the user's own image-capable model. Filtered
+resources are drawn even before route stops exist; the JSON resource pool
+contains their profile-pixel coordinates and stable task ResourceIds. Model
+responses can reference those IDs without guessing database metadata.
+The saved terrain is never painted over. Small images enlarge only in the
+editor; model image dimensions and profile coordinates remain original.
+
+MAP TRACKING
+The bound game window is captured while focused. SIFT features and a
+validated partial affine transform align the reference terrain; optical
+flow follows movement between absolute matches. Uncertain or stale results
+hide the route. The full-map viewport excludes the recorded UI controls.
+Hide while big map moves reduces visible alignment lag while dragging.
+
+Custom/public maps use terrain confidence. A locally retained legacy map
+header asset adds a title check for the original zone when available.
+The public release does not redistribute that game screenshot.
+
+Minimap mode uses a saved normalized rectangle/ellipse boundary and can
+follow rotation. Paths, arrows, markers and labels clip inside that area.
+Only the current stop has a label. Choose the boundary again after moving
+or resizing the panel; use high map opacity. Big map/minimap mode switching
+is manual. Small or transparent maps with little shared terrain can lose
+alignment. Low-detail images are rejected without stopping the worker.
+
+RESOURCE TYPES
+Included map catalog metadata supplies exact categories/names. Picture
+zones use the chosen manual Type. In Developer mode, click-local image
+templates can attempt a category match on the reference picture. They do
+not scan game captures or generate a resource database.
+Existing learned picture samples still recognize clicks in normal mode;
+Developer mode is needed to configure samples, not to keep using them.
+Teach a tight resource icon crop using Learn icon, or Import icons from
+user-provided type-named PNG files. These samples remain in the user's
+account. Ambiguous matches become Custom; Ctrl+click places a manual node.
+
+Display categories: Metal Ore, Gems, Od, Herbs, Trees, Berries, Vegetables,
+Shellfish, Hidden Cube Spots, Custom and Waypoint. Shape/letter markers
+and labels distinguish categories in addition to color.
+
+ROUTE CALCULATION
+Calculate shortest minimizes pixel distance while retaining the first
+stop. Small routes can use exact search; larger routes use a heuristic.
+Larger searches have a five-second budget and can be cancelled on close.
+This does not determine traversable terrain or resource respawn schedules.
+Waypoint bends are preserved by declining automatic reordering; replan
+with the model to adjust those paths. Review model-generated routes.
+
+DATA LIMITS
+Maximum 100 zone profiles; 500 routes per zone; 1,000 stops per route;
+10,000 catalog points; 25 million image pixels; 100 local icon samples.
+JSON limits: profile/store 50 MB, route/catalog 24 MB, model response 2 MB.
+Nested JSON structures are limited to 64 levels. Image import minimum
+80 x 80; selected resource samples 6 to 64 pixels across.
+
+CATALOGS
+See CATALOG-FORMAT.txt and the empty Catalog.csv template. Source-image
+coordinates can be filtered and translated through profile crop metadata.
+Configured Altgard and Verteron resources are bundled with the supplied
+world images. A custom picture alone does not create verified gathering
+locations; use Developer mode catalog import, manual stops or a reviewed
+model proposal.
+
+IMPLEMENTATION AND STARTUP
+Windows 10/11, windowed/borderless game mode. Source launcher supports
+64-bit CPython 3.11 through 3.14 with tkinter and installs hash-checked
+Windows wheels into an isolated virtual environment. Runtime dependencies
+are numpy, OpenCV headless, Pillow and mss. No game injection or input
+simulation is used. A single-instance lock protects the data store.
+
+The frozen executable resolves bundled assets relative to its source
+module. Build the EXE and per-user installer with BUILD.cmd or the GitHub
+Windows workflow; see RELEASE.txt for release and Windows test steps.
+New map identities use decoded pixels and dimensions so PNG compression
+changes do not invalidate a saved map. Verified older IDs still load.
+SECURITY.txt explains capture/storage/sharing. The application has no ads
+or sponsor panel. Its optional coffee button opens the supplied Ko-fi page
+in the user's browser. Local preferences stay out of shared profiles.

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Altgard",
+    "world_id": "1110",
+    "file": "altgard.map.json",
+    "sha256": "4b025ba8fd253c0a1fd31601aa4e0403e2356211b0a9f3d0dc5a95e23bdf93e7"
+  },
+  {
+    "name": "Verteron",
+    "world_id": "1010",
+    "file": "verteron.map.json",
+    "sha256": "c38d3190ec1f161b945d06b1287a3f725e7f836afc3396c664cec67ba24e7d6a"
+  }
+]

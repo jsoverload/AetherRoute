@@ -1,0 +1,78 @@
+AETHERROUTE 0.9.0-rc6 — GITHUB AND WINDOWS RELEASES
+
+AetherRoute is the independent project name, formerly Wayveil. Application
+code is MIT licensed; retain LICENSE.txt, NOTICE.txt, maps/NOTICE.txt and
+third-party notices. The optional coffee button and GitHub funding entry
+use the supplied https://ko-fi.com/juiceoverload address. There are no ads,
+embedded payments, sponsor panel or paid features.
+
+INCLUDED WORLDS
+Altgard: 2048 x 2048 terrain, 4063 resource/cube positions, 72 regions.
+Verteron: 2048 x 2048 terrain, 4173 resource/cube positions, 71 regions.
+Both include verified coordinate bounds. They are ready in Interactive
+maps with no database import. More worlds can be added to maps/index.json
+with their own configured pack and checksum. Add each file to the release
+allowlist and update validation/self-tests when changing included worlds.
+Do not assume another world has these bounds. Third-party map materials
+retain their original rights; they are not relicensed under MIT.
+
+WINDOWS UI
+The bottom-right launcher opens the main window. Closing the main window
+hides it; Quit exits. Before binding, it uses the desktop work area. After
+binding, it follows the foreground game's client area. It can be dragged;
+its margin is saved locally. It is clickable and uses no-activation window
+styles while floating; it is separate from the click-through route overlay.
+Settings controls startup visibility, launcher, topmost and Developer mode.
+Interactive and picture profiles keep separate saved-zone lists.
+
+PUT THE CLEAN SOURCE ON GITHUB
+1. Extract AetherRoute-Windows-RC.zip into a new folder.
+2. Upload the CONTENTS of AetherRoute as the repository root, including
+   .github and .gitignore. The workflow is .github/workflows/windows.yml.
+3. Use the clean source ZIP, not the workspace or LOCALAPPDATA folder.
+4. Open GitHub Actions > Windows installer > Run workflow. Download its
+   windows-release artifact after success: Setup EXE, portable ZIP, source
+   ZIP and checksums.
+5. Test the actual EXE on Windows with Aion 2 before publishing.
+6. Push a version tag matching product.VERSION, currently v0.9.0-rc6.
+   Review the resulting draft prerelease, then publish it when ready.
+
+Build jobs use read-only repository access; only the separate tag release
+job can create drafts. No personal access token is required. Actions and
+build dependencies are pinned. No repository or release was published here.
+.github/FUNDING.yml already sets ko_fi: juiceoverload.
+
+BUILD LOCALLY
+Install 64-bit Python 3.11–3.14 with tkinter and Inno Setup 6, then BUILD.cmd.
+It stages the public allowlist, includes assets and built-in worlds, collects
+runtime notices, checks private build paths and runs the frozen --self-test.
+The workflow also tests silent install, installed self-test and uninstall.
+Output in release/:
+- AetherRoute-Setup-<version>.exe: per-user installer, Python included.
+- AetherRoute-Windows-<version>-unsigned.zip: complete portable application.
+- AetherRoute-Source-<version>.zip: clean source and configured map assets.
+- SHA256SUMS.txt: hashes of those downloads.
+
+Builds remain unsigned unless signing is added. Do not commit signing keys
+or credentials. Regenerate checksums after signing.
+
+UPGRADES
+Saved data stays in LOCALAPPDATA/Aion2RouteSync. Stable pixel identifiers,
+original legacy references and wayveil-map-v1 imports remain compatible.
+Opening profiles does not reset them. Zone creation keeps previous profiles;
+new exports preserve the interactive/picture source and omit local settings.
+Older profiles without source metadata are grouped from their catalog data.
+Uninstall removes the program and leaves saved data available for reinstall.
+
+WINDOWS RELEASE CHECKS
+Verify standard-user install/upgrade/uninstall, save/restart, route/profile
+sharing, both built-in worlds, Developer mode and picture editing. Check the
+launcher opens/closes without disturbing game input, focus changes, binding,
+drag/reset, game movement/minimization, multiple monitors and DPI. Verify
+big-map/minimap tracking with the actual game. Linux GUI checks and frozen
+--self-test do not establish live Windows/game behavior.
+
+REBUILD SOURCE ZIP
+Install pinned runtime dependencies and run python package_release.py.
+The package allowlist excludes all user stores and private captures.
+SHA256SUMS.txt lists every package member except itself.
