@@ -65,3 +65,35 @@ def read_catalog(path,reference=REFERENCE,size=(812,733),crop=None,source_size=N
     raise ValidationError('Catalog reference does not match this profile. Use profile pixels or source-image pixels with crop metadata.')
 
 def label(node):return node.get('Name') or NAMES[node['Kind']]
+
+def connect_nodes(route,catalog,limit=1000):
+    """Keep existing stops, then append missing resources in nearby order."""
+    if len(route)>limit:raise ValidationError(f'A route supports at most {limit:,} stops.')
+    result=[dict(n) for n in route]
+    def position(node):return node['X'],node['Y'],node['Kind']
+    ids={n['Id'] for n in route if n.get('Id')}
+    positions={position(n) for n in route}
+    unidentified={position(n) for n in route if not n.get('Id')}
+    remaining=[]
+    for node in catalog:
+        identity=node.get('Id');point=position(node)
+        if identity:
+            if identity in ids:continue
+            ids.add(identity)
+            if point in unidentified:
+                # A stop without an ID can match one database resource. Distinct
+                # IDs at the same position and type still remain separate stops.
+                unidentified.remove(point);continue
+        else:
+            if point in positions:continue
+            unidentified.add(point)
+        positions.add(point);remaining.append(dict(node))
+        if len(result)+len(remaining)>limit:
+            raise ValidationError(f'A route supports at most {limit:,} stops. Select fewer resource types or crop a smaller zone. No stops were added.')
+    while remaining:
+        if result:
+            last=result[-1]
+            at=min(range(len(remaining)),key=lambda i:(remaining[i]['X']-last['X'])**2+(remaining[i]['Y']-last['Y'])**2)
+        else:at=0
+        result.append(remaining.pop(at))
+    return result

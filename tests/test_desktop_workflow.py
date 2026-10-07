@@ -20,6 +20,8 @@ from world_maps import built_in_maps, load_built_in
 from ui_settings import Preferences, clean_settings
 from desktop_ui import GameLauncher, launcher_position
 from product import DATA_FOLDER, NAME
+from app import RouteEditor
+from routes import connect_nodes
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -128,6 +130,80 @@ class DesktopWorkflowTests(unittest.TestCase):
         self.assertEqual(launcher_position((0,0,1920,1080),(178,48),[18,36]),(1724,996))
         self.assertEqual(launcher_position((-1920,-200,1920,1080),(178,48),[18,36]),(-196,796))
         self.assertEqual(launcher_position((40,30,100,20),(178,48),[18,36]),(40,30))
+
+class ConnectNodesTests(unittest.TestCase):
+    def node(self,identity,x,y=0,kind='Crystal',**extra):
+        return dict(X=x,Y=y,Kind=kind,Id=identity,Name=identity,Source='Imported map database',**extra)
+    def editor(self,nodes,catalog,filters=None):
+        editor=RouteEditor.__new__(RouteEditor)
+        editor.app=SimpleNamespace(nodes=copy.deepcopy(nodes),catalog=copy.deepcopy(catalog),
+            filters={kind:Mock(get=Mock(return_value=enabled)) for kind,enabled in (filters or {}).items()},
+            next_node=4,route_changed=Mock())
+        editor.history=[];editor.selected=0;editor.hint=Mock();editor.window=Mock()
+        return editor
+
+    def test_one_click_respects_filters_preserves_manual_stops_and_undoes_together(self):
+        manual=dict(X=10,Y=20,Kind='Waypoint',Name='Bridge',Source='Manual marker')
+        visited=self.node('visited',30)
+        far=self.node('far',100);near=self.node('near',31);hidden=self.node('ore',32,kind='Ore')
+        original=[manual,visited]
+        editor=self.editor(original,[visited,far,near,hidden],{'Crystal':True,'Ore':False})
+        catalog_before=copy.deepcopy(editor.app.catalog)
+        editor.connect_all()
+        self.assertEqual(editor.app.nodes[:2],original)
+        self.assertEqual([n['Id'] for n in editor.app.nodes[2:]],['near','far'])
+        self.assertEqual(editor.app.nodes[2],near)
+        self.assertEqual(editor.app.catalog,catalog_before)
+        self.assertEqual(len(editor.history),1)
+        self.assertIsNone(editor.selected);self.assertEqual(editor.app.next_node,0)
+        editor.app.route_changed.assert_called_once_with()
+        editor.undo()
+        self.assertEqual(editor.app.nodes,original);self.assertEqual(editor.history,[])
+        self.assertEqual(editor.app.route_changed.call_count,2)
+
+    def test_repeat_click_does_not_duplicate_nodes_or_create_an_undo_step(self):
+        editor=self.editor([],[self.node('a',0),self.node('b',10),self.node('a',0)])
+        editor.connect_all();before=copy.deepcopy(editor.app.nodes)
+        editor.connect_all()
+        self.assertEqual(editor.app.nodes,before);self.assertEqual(len(before),2)
+        self.assertEqual(len(editor.history),1)
+        editor.app.route_changed.assert_called_once_with()
+
+    def test_distinct_resource_ids_at_one_position_survive_connection(self):
+        first=self.node('a',10);second=self.node('b',10)
+        connected=connect_nodes([],[first,second,first])
+        self.assertEqual(connected,[first,second])
+        manual=dict(X=10,Y=0,Kind='Crystal',Name='My existing stop',Source='Manual marker')
+        connected=connect_nodes([manual],[first,second,first])
+        self.assertEqual(connected,[manual,second])
+        self.assertEqual(connect_nodes(connected,[first,second]),connected)
+
+    def test_catalog_without_ids_matches_position_and_type_without_retyping(self):
+        manual=dict(X=10,Y=5,Kind='Plant',Name='Manual Od',Source='Manual marker')
+        catalog=[dict(X=10,Y=5,Kind='Plant'),dict(X=10,Y=5,Kind='Crystal'),dict(X=10,Y=5,Kind='Crystal')]
+        connected=connect_nodes([manual],catalog)
+        self.assertEqual(connected,[manual,catalog[1]])
+        connected[1]['Name']='Route-only edit'
+        self.assertNotIn('Name',catalog[1])
+
+    def test_limit_rejection_keeps_route_selection_history_and_save_untouched(self):
+        nodes=[self.node('n'+str(i),i%100,i//100) for i in range(1000)]
+        editor=self.editor(nodes,[self.node('extra',1,1)])
+        with patch('app.messagebox.showinfo') as notice:editor.connect_all()
+        self.assertEqual(editor.app.nodes,nodes);self.assertEqual(editor.history,[])
+        self.assertEqual(editor.selected,0);self.assertEqual(editor.app.next_node,4)
+        editor.app.route_changed.assert_not_called()
+        notice.assert_called_once()
+        self.assertIn('No stops were added',notice.call_args.args[1])
+        self.assertEqual(len(connect_nodes([],nodes)),1000)
+
+    def test_empty_picture_or_unselected_types_do_not_change_the_route(self):
+        for catalog,filters in (([],{}),([self.node('a',5)],{'Crystal':False})):
+            editor=self.editor([],catalog,filters)
+            editor.connect_all()
+            self.assertEqual(editor.app.nodes,[]);self.assertEqual(editor.history,[])
+            editor.app.route_changed.assert_not_called()
+            self.assertIn('No resource nodes',editor.hint.set.call_args.args[0])
 
 class WindowsSurfaceTests(unittest.TestCase):
     def setUp(self):

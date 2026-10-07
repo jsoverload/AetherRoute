@@ -49,6 +49,11 @@ A picture by itself does not provide a database of resource locations.
 
 4. EDIT AND SAVE ROUTES
 
+- Connect all nodes: add all catalog resources matching the selected types
+  in this zone. Existing stops keep their order; new resources are added in
+  nearby order without duplicates. Undo reverses the whole action. Find
+  this button in Routes or Edit route. Choose fewer types or a smaller zone
+  if the route would exceed 1,000 stops; no partial route is added.
 - Click a stop: select it; choose Type/name and Apply to selected to change it.
 - Ctrl + click: add a manual stop using your chosen Type/name.
 - Right-click a stop: remove it.

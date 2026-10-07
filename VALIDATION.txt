@@ -1,6 +1,24 @@
-AETHERROUTE 0.9.0-rc8 — VALIDATION
+AETHERROUTE 0.9.0-rc9 — VALIDATION
 
-CURRENT RELEASE CHECKS (RC8)
+CURRENT RELEASE CHECKS (RC9)
+Based on GitHub main at da74d89a9b511c0852e0bf99c01fb29b086071a7.
+Connect all nodes is available in Routes and the route editor. It adds the
+current zone's catalog resources matching the selected types, preserves
+existing stops and their metadata/order, and appends missing stops in
+nearby order. It does not infer travel barriers or extract nodes from an
+image. Shorten route remains available for further ordering.
+
+All 63 tests pass on Python 3.12/Linux. Six new checks exercise the editor
+action with filters, preservation of manual waypoints and resource names,
+one-step Undo, repeated clicks, distinct database IDs at one coordinate,
+catalogs without IDs, empty selections, and the exact 1,000-stop boundary.
+An oversized selection leaves the route, undo history, selection and save
+callback untouched. The earlier 57 checks remain applicable and pass.
+Compilation and app --self-test pass. App and Windows PE versions are RC9.
+Native Windows GUI execution and installer builds require the Windows
+workflow and a Windows check; these automated actions run without a display.
+
+EARLIER RELEASE CHECKS (RC8)
 Based on the current GitHub main source at
 f046b9981f252f29be9de7eb7a8edba5f94f544a. Existing profile storage, route
 editing, map tracking, native window controls and hotkeys are retained.

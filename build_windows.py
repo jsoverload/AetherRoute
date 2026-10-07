@@ -78,7 +78,7 @@ def build():
         for name,data in members().items():
             path=stage/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
         version=stage/'version.rc'
-        version.write_text("VSVersionInfo(ffi=FixedFileInfo(filevers=(0,9,0,8),prodvers=(0,9,0,8),mask=0x3f,flags=0x2,OS=0x40004,fileType=0x1,subtype=0x0,date=(0,0)),kids=[StringFileInfo([StringTable('040904B0',[StringStruct('FileDescription','AetherRoute route overlay'),StringStruct('FileVersion','"+VERSION+"'),StringStruct('ProductName','AetherRoute'),StringStruct('ProductVersion','"+VERSION+"'),StringStruct('OriginalFilename','AetherRoute.exe')])]),VarFileInfo([VarStruct('Translation',[1033,1200])])])")
+        version.write_text("VSVersionInfo(ffi=FixedFileInfo(filevers=(0,9,0,9),prodvers=(0,9,0,9),mask=0x3f,flags=0x2,OS=0x40004,fileType=0x1,subtype=0x0,date=(0,0)),kids=[StringFileInfo([StringTable('040904B0',[StringStruct('FileDescription','AetherRoute route overlay'),StringStruct('FileVersion','"+VERSION+"'),StringStruct('ProductName','AetherRoute'),StringStruct('ProductVersion','"+VERSION+"'),StringStruct('OriginalFilename','AetherRoute.exe')])]),VarFileInfo([VarStruct('Translation',[1033,1200])])])")
         subprocess.run([sys.executable,'-m','PyInstaller','--noconfirm','--clean','--onedir','--windowed','--noupx',
             '--name',NAME,'--distpath',str(Path(temporary)/'dist'),'--workpath',str(Path(temporary)/'work'),
             '--specpath',str(Path(temporary)/'spec'),'--version-file',str(version),

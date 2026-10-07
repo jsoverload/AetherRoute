@@ -60,11 +60,14 @@ You can also create an empty zone and add its route in the editor afterward. New
 
 The editor shows your route and a list of stops. Clicking a resource from an included map automatically uses its resource type and name.
 
+Click **Connect all nodes** in **Routes** or the editor to connect all catalog resources matching your selected resource types in this zone. Existing stops keep their order; missing resources are added in nearby order without duplicates. **Undo** reverses the whole action. If the route would exceed 1,000 stops, select fewer types or crop a smaller zone.
+
 ![AetherRoute route editor with typed resources and a connected gathering route](docs/images/route-editor.png)
 
 | Action | Control |
 | --- | --- |
 | Add a resource or select an existing stop | Click its symbol |
+| Connect all selected resource nodes in the zone | **Connect all nodes** |
 | Place a manual stop | Choose **Type**, then **Ctrl + click** |
 | Remove a stop | Right-click it |
 | Start the route from another stop | **Shift + click** that stop |

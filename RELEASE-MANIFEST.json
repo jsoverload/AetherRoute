@@ -1,6 +1,6 @@
 {
   "product": "AetherRoute",
-  "version": "0.9.0-rc8",
+  "version": "0.9.0-rc9",
   "kind": "Windows source release candidate",
   "dependencies": {
     "numpy": "2.3.5",

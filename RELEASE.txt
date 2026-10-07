@@ -1,4 +1,4 @@
-AETHERROUTE 0.9.0-rc8 — GITHUB AND WINDOWS RELEASES
+AETHERROUTE 0.9.0-rc9 — GITHUB AND WINDOWS RELEASES
 
 AetherRoute is the independent project name, formerly Wayveil. Application
 code is MIT licensed; retain LICENSE.txt, NOTICE.txt, maps/NOTICE.txt and
@@ -47,7 +47,7 @@ PUT THE CLEAN SOURCE ON GITHUB
    windows-release artifact after success: Setup EXE, portable ZIP, source
    ZIP and checksums.
 5. Test the actual EXE on Windows with Aion 2 before publishing.
-6. Push a version tag matching product.VERSION, currently v0.9.0-rc8,
+6. Push a version tag matching product.VERSION, currently v0.9.0-rc9,
    at the updated main commit. Existing tags keep their original code.
    Review the resulting draft prerelease, then publish it when ready.
 

@@ -19,7 +19,7 @@ import numpy as np
 from PIL import Image, ImageTk
 from tracking import TerrainTracker, project, clip_map_segment, inside_map
 from planner import best_route, length
-from routes import REFERENCE, KINDS, NAMES, clean_nodes, decode_route, read_catalog, label
+from routes import REFERENCE, KINDS, NAMES, clean_nodes, decode_route, read_catalog, label, connect_nodes
 from motion import MotionGate
 from profiles import ProfileStore, load_image, image_bytes, profile_source
 from profile_ui import CropDialog, MapAreaDialog, IconSampleDialog
@@ -80,6 +80,7 @@ class RouteEditor:
         self.canvas=tk.Canvas(body,width=self.width,height=self.height,highlightthickness=0,bg=BG);self.canvas.pack(side='left')
         self.image=ImageTk.PhotoImage(app.reference.resize((self.width,self.height),Image.Resampling.BILINEAR))
         sidebar=ttk.Frame(body,width=200);sidebar.pack(side='left',fill='y',padx=(10,0))
+        ttk.Button(sidebar,text='Connect all nodes',command=self.connect_all).pack(fill='x',pady=(0,8))
         ttk.Label(sidebar,text='Route order').pack(anchor='w')
         listframe=ttk.Frame(sidebar);listframe.pack(fill='both',expand=True)
         self.stops=tk.Listbox(listframe,width=24,bg=PANEL,fg=FG,selectbackground='#365f79',exportselection=False)
@@ -100,6 +101,16 @@ class RouteEditor:
         else:self.devtools.pack_forget()
     def visible_catalog(self):
         return [n for n in self.app.catalog if n['Kind'] not in self.app.filters or self.app.filters[n['Kind']].get()]
+    def connect_all(self):
+        try:nodes=connect_nodes(self.app.nodes,self.visible_catalog())
+        except ValidationError as exc:
+            messagebox.showinfo('Connect all nodes',str(exc),parent=self.window);return
+        added=len(nodes)-len(self.app.nodes)
+        if not added:
+            self.hint.set('All selected resources are already connected. Use Shorten route to adjust their order.' if nodes else 'No resource nodes are available. Select resource types or add stops to this zone.');return
+        self.remember();self.app.nodes=nodes;self.selected=None;self.app.next_node=0
+        self.app.route_changed()
+        self.hint.set(f'Connected {added:,} additional nodes. Existing stops kept their order. Undo reverses this action; Shorten route can reduce map distance.')
     def learn_icon(self):
         if self.selected is None or self.selected>=len(self.app.nodes):
             messagebox.showinfo('Learn icon','Click a resource icon to add or select a stop first.',parent=self.window);return
@@ -329,7 +340,7 @@ class App:
         self.route_selector=ttk.Combobox(routes,state='readonly');self.route_selector.pack(fill='x',pady=5);self.route_selector.bind('<<ComboboxSelected>>',self.switch_route)
         ttk.Label(routes,text='Route name').pack(anchor='w')
         entry=ttk.Entry(routes,textvariable=self.route_name);entry.pack(fill='x',pady=(3,8));entry.bind('<FocusOut>',lambda e:self.route_changed());entry.bind('<Return>',lambda e:self.route_changed())
-        for buttons in [[('New route',self.new_route),('Edit route',self.open_editor)],[('Import route',self.load_route),('Export route',self.save_route)],[('Save route',self.store_route),('Delete route',self.delete_route)],[('Calculate shortest',self.shorten)]]:
+        for buttons in [[('New route',self.new_route),('Edit route',self.open_editor)],[('Import route',self.load_route),('Export route',self.save_route)],[('Save route',self.store_route),('Delete route',self.delete_route)],[('Connect all nodes',self.connect_all),('Calculate shortest',self.shorten)]]:
             row=ttk.Frame(routes);row.pack(fill='x',pady=3)
             for text,command in buttons:ttk.Button(row,text=text,command=command).pack(side='left',expand=True,fill='x',padx=2)
         self.route_devtools=ttk.Frame(routes)
@@ -432,6 +443,8 @@ class App:
     def open_editor(self):
         if self.editor:self.editor.window.lift()
         else:self.editor=RouteEditor(self)
+    def connect_all(self):
+        self.open_editor();self.editor.connect_all()
     def shorten(self):
         if self.calculating:self.detail.set('A route calculation is already running.');return
         nodes=self.active_nodes()
