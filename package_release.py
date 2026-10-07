@@ -20,9 +20,9 @@ FILES=('app.py','tracking.py','minimap.py','motion.py','routes.py','profiles.py'
        'ADVANCED.txt','CATALOG-FORMAT.txt','Catalog.csv','SECURITY.txt',
        'RELEASE.txt','VALIDATION.txt','package_release.py',
        'build_windows.py','BUILD.cmd','LICENSE.txt','README.md','NOTICE.txt',
-       '.gitignore','.github/workflows/windows.yml','.github/FUNDING.yml',
+       '.gitignore','.gitattributes','.github/workflows/windows.yml','.github/FUNDING.yml',
        '.github/dependabot.yml','installer/AetherRoute.iss','tests/test_profiles.py','tests/test_map_data.py','tests/test_model_exports.py','MAP-PACKS.txt',
-       'tests/test_desktop_workflow.py','maps/index.json','maps/altgard.map.json','maps/verteron.map.json','maps/NOTICE.txt',
+       'tests/test_desktop_workflow.py','tests/test_windows_checkout.py','maps/index.json','maps/altgard.map.json','maps/verteron.map.json','maps/NOTICE.txt',
        'runtime_notices/tcl8.6-license.terms','runtime_notices/tk8.6-license.terms',
        'runtime_notices/SOURCES.txt')
 DEPENDENCIES={'numpy':'2.3.5','opencv-python-headless':'5.0.0.93','Pillow':'12.3.0','mss':'10.2.0'}

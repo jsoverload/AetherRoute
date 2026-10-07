@@ -1,12 +1,14 @@
-AETHERROUTE 0.9.0-rc6 — VALIDATION
+AETHERROUTE 0.9.0-rc7 — VALIDATION
 
-Environment: Python 3.12/Linux, Tk on a virtual 1800 x 1200 display.
+RC7 automated checks: Python 3.12/Linux. The GUI checks below were completed
+for RC6 using Tk on a virtual 1800 x 1200 display; RC7 changes checkout rules,
+packaging and version metadata, with no runtime UI changes.
 Windows native API execution, installer compilation and actual game focus/
 tracking need Windows verification. Earlier overlay/minimap builds were
-reported working by the user; this is not a live-game test of RC6.
+reported working by the user; this is not a live-game test of RC7.
 
 CURRENT AUTOMATED CHECKS
-51 tests pass covering profile references across compression/metadata,
+53 tests pass covering profile references across compression/metadata,
 legacy map aliases and wayveil-map-v1 imports, rejection of altered images,
 privacy and rollback, backup recovery, strict JSON/geometry and restart.
 Map/model checks cover world transforms, missing bounds, filters, crops,
@@ -25,6 +27,21 @@ coordinates. These mocks verify API arguments, not Windows behavior.
 Focus/lifetime tests cover game client bounds, hiding while unfocused or
 minimized, and returning to the desktop when the bound game closes.
 
+RC7 WINDOWS CHECKOUT REGRESSION
+The failed jsoverload/AetherRoute workflow at commit
+9c6d23c17f3e8e8ed7a865ba9a1d08b96d84f226 stops at two map checksum tests
+before creating an EXE. Both Git map blobs match the expected original LF
+bytes. A real temporary Git repository configured with core.autocrlf=true
+and core.eol=crlf reproduces the checksum failures for both worlds. Adding
+the packaged .gitattributes rule and doing a fresh checkout preserves the
+original map bytes; both checksum-validated worlds open successfully.
+A release-members test checks that generated source includes that rule and
+retains the exact map hashes. No checksum check was disabled or relaxed.
+The existing 51 checks still pass. App and PE version metadata are RC7 so
+a new v0.9.0-rc7 tag can include the fix rather than moving the old tag.
+The full Windows EXE build is still pending a new repository workflow run.
+The current GitHub connection has read permission but no push permission.
+
 BUNDLED WORLDS
 Altgard: 2048 x 2048 image, 4063 resources/cubes, 72 regions.
 Verteron: 2048 x 2048 image, 4173 resources/cubes, 71 regions.
@@ -35,7 +52,7 @@ Explicit bounds and unrecognized custom images retain their own mapping.
 Checks cover map-index paths/duplicates/metadata, file checksums and tamper
 rejection. Built-in packs are separate from editable local custom entries.
 
-GUI WORKFLOWS
+GUI WORKFLOWS (RC6)
 The actual controller and map/editor windows pass these checks:
 - Normal startup, default hidden Developer controls and included world picker.
 - Opening the map three times: complete, centered fit without pressing reset.
