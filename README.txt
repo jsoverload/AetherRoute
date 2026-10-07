@@ -5,6 +5,8 @@ AETHERROUTE — SIMPLE GUIDE
 On Windows, open AetherRoute from the Start menu or run AetherRoute.exe.
 For this source ZIP, install 64-bit Python 3.11–3.14 with tkinter, extract
 EVERYTHING, then double-click START.cmd. First setup needs the internet.
+Installers and portable ZIPs are at:
+https://github.com/jsoverload/AetherRoute/releases
 
 A small AetherRoute button appears at the bottom-right. Click it to open
 the main window. Hide to launcher, or the window's X, returns to that button.
@@ -90,7 +92,35 @@ Use high in-game map opacity. Re-select the area if you move or resize the
 panel. Settings save with the zone. Only the current stop is labeled in
 minimap mode. Switch Track this map back to Big map for the full map.
 
-7. SHARE OR IMPORT
+7. TAKE A TUTORIAL SCREENSHOT
+
+1) Bind the game and choose your saved route.
+2) In Overlay, click Save overlay screenshot (5 seconds).
+3) Choose a PNG filename. The main window hides.
+4) Switch to Aion 2, open the map with M if needed and keep it still.
+5) Wait five seconds. The PNG includes the visible game, route and launcher.
+
+This also works with an aligned minimap. Use this button when other screen
+capture tools omit the route. Tracking continues normally afterward.
+If the route is not aligned, no image is saved. Reopen Overlay to see the
+message and try again. Cancel screenshot cancels a pending capture.
+Windows + Shift + S works normally for the main window and route editor.
+
+FOR OBS OR NORMAL SCREENSHOT TOOLS
+1) In OBS, add Display Capture and select the game's monitor.
+2) In Overlay, click Start OBS recording mode (5 seconds).
+3) Switch to the game, open its map and wait for alignment. Keep it still.
+4) The route freezes and becomes capturable. Start recording in OBS, or
+   use Windows + Shift + S for a screenshot.
+5) Ctrl + Alt + R or reopening AetherRoute ends the mode and resumes tracking.
+
+Ctrl + Alt + R can also start the mode immediately with an aligned route.
+Keep the map and character still. Common movement keys, game mouse buttons,
+map closing, game minimizing or changing its window geometry end this mode.
+Recording mode is temporary; it never saves with a profile.
+See TUTORIAL.md for a short walkthrough with the capture controls pictured.
+
+8. SHARE OR IMPORT
 
 Export profile shares the zone picture, resources and saved routes together.
 Import profile adds another user's zone without replacing your zones.
@@ -99,7 +129,7 @@ reference picture. Profile sharing omits custom model prompts, preferences,
 learned icons and hidden image metadata. Check visible pictures and names
 before sharing them.
 
-8. ASK YOUR OWN MODEL TO SUGGEST A PATH — OPTIONAL
+9. ASK YOUR OWN MODEL TO SUGGEST A PATH — OPTIONAL
 
 1) In Model planning, choose Draw path from image.
 2) Select resource types in Routes. Catalog resources appear in the export
@@ -117,7 +147,7 @@ need Allow model to choose a subset if over 1000 stops are selected. Image
 mode with an empty Current route can choose from the resource pool.
 AetherRoute does not contact models or require an API key.
 
-9. SETTINGS AND OPTIONAL CUSTOM TOOLS
+10. SETTINGS AND OPTIONAL CUSTOM TOOLS
 
 Settings lets you disable the launcher, start with the main window visible,
 or turn off keeping the main window above the game.
@@ -133,7 +163,7 @@ See MAP-PACKS.txt for custom worlds. Normal use needs none of these steps.
 Buy me a coffee opens https://ko-fi.com/juiceoverload in your browser.
 Support is optional; there are no ads or paid features.
 
-10. IF SOMETHING LOOKS WRONG
+11. IF SOMETHING LOOKS WRONG
 
 - Map opens in a corner: the canvas now fits after layout. Fit map / reset
   area remains available to return to the complete world.
