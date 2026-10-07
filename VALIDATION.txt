@@ -1,0 +1,127 @@
+AETHERROUTE 0.9.0-rc8 — VALIDATION
+
+CURRENT RELEASE CHECKS (RC8)
+Based on the current GitHub main source at
+f046b9981f252f29be9de7eb7a8edba5f94f544a. Existing profile storage, route
+editing, map tracking, native window controls and hotkeys are retained.
+No screenshot/recording feature is included in this version; the guide
+matches the available controls. Illustrated guide assets are included in
+the source allowlist. App and Windows version metadata both identify RC8.
+
+All 57 existing applicable tests pass on Python 3.12/Linux, including
+profile compatibility, import limits, coordinate transforms, model exports,
+settings persistence, launcher focus contracts, map checksums, Windows-style
+checkouts and build-path privacy. Native Windows execution, installer
+compilation and live game behavior require the Windows workflow and a
+Windows test. The checks below record the earlier releases' validation.
+
+RC7 automated checks: Python 3.12/Linux. The GUI checks below were completed
+for RC6 using Tk on a virtual 1800 x 1200 display; RC7 changes checkout rules,
+packaging and version metadata, with no runtime UI changes.
+Windows native API execution, installer compilation and actual game focus/
+tracking need Windows verification. Earlier overlay/minimap builds were
+reported working by the user; this is not a live-game test of RC7.
+
+CURRENT AUTOMATED CHECKS
+58 tests pass covering profile references across compression/metadata,
+legacy map aliases and wayveil-map-v1 imports, rejection of altered images,
+privacy and rollback, backup recovery, strict JSON/geometry and restart.
+Map/model checks cover world transforms, missing bounds, filters, crops,
+resource IDs, unrouted resource glyph exports, exact resource metadata,
+waypoints, response bounds/duplicates and old model-task compatibility.
+
+New workflow tests cover separate interactive/picture origins, source
+metadata through import/export/restart, inference of older profile origins
+without rewriting files, invalid-source rejection before saving, the stable
+pre-rename pixel namespace/data folder, preference persistence/failed saves,
+strict preferences and omitted unknown fields,
+negative monitor coordinates and small-screen launcher placement.
+Native API contract tests check that launcher styles remain clickable and
+use no-activation flags, and absolute positioning accepts negative monitor
+coordinates. These mocks verify API arguments, not Windows behavior.
+Focus/lifetime tests cover game client bounds, hiding while unfocused or
+minimized, and returning to the desktop when the bound game closes.
+
+RC7 WINDOWS CHECKOUT REGRESSION
+The failed jsoverload/AetherRoute workflow at commit
+9c6d23c17f3e8e8ed7a865ba9a1d08b96d84f226 stops at two map checksum tests
+before creating an EXE. Both Git map blobs match the expected original LF
+bytes. A real temporary Git repository configured with core.autocrlf=true
+and core.eol=crlf reproduces the checksum failures for both worlds. Adding
+the packaged .gitattributes rule and doing a fresh checkout preserves the
+original map bytes; both checksum-validated worlds open successfully.
+A release-members test checks that generated source includes that rule and
+retains the exact map hashes. No checksum check was disabled or relaxed.
+The existing 51 checks still pass. App and PE version metadata are RC7 so
+a new v0.9.0-rc7 tag can include the fix rather than moving the old tag.
+The full Windows EXE build is still pending a new repository workflow run.
+The current GitHub connection has read permission but no push permission.
+
+RC7 FOLLOW-UP: RELEASE TAG AND HOSTED RUNNER PRIVACY
+At commit 75863939b77511418a66cb2c85a58e4bdf4cff01, the main Windows job
+passed all 53 previous tests and completed PyInstaller EXE creation, then
+stopped at the bundle path audit. The tag job used v0.9.0-rc6 with VERSION
+0.9.0-rc7 and correctly rejected that mismatch. Use a new v0.9.0-rc7 tag.
+
+The pinned NumPy Windows wheel contains GitHub's generic runneradmin home
+prefix in its upstream build metadata. Its original bytes reproduce the
+home-prefix rejection locally. The audit now exempts only that exact public
+home on GitHub-hosted Actions, with both GitHub environment flags present.
+Local and self-hosted homes, other homes, exact source paths and temporary
+build paths remain checked. Five regression tests cover these cases,
+Windows path encodings and errors that identify the relative shipped file
+without logging a private path. Each file is read once during the audit.
+The failing CI message did not identify a file; its exact matched file is
+unconfirmed. The updated audit provides that diagnostic if another path is
+found. A fresh full Windows workflow is required to verify release creation.
+
+BUNDLED WORLDS
+Altgard: 2048 x 2048 image, 4063 resources/cubes, 72 regions.
+Verteron: 2048 x 2048 image, 4173 resources/cubes, 71 regions.
+Each uses its supplied bounds [-408000,-408000,408000,408000], with world Y
+increasing north. All resource positions are within their image. Automatic
+bounds require both the world ID and exact decoded-image pixel identity.
+Explicit bounds and unrecognized custom images retain their own mapping.
+Checks cover map-index paths/duplicates/metadata, file checksums and tamper
+rejection. Built-in packs are separate from editable local custom entries.
+
+GUI WORKFLOWS (RC6)
+The actual controller and map/editor windows pass these checks:
+- Normal startup, default hidden Developer controls and included world picker.
+- Opening the map three times: complete, centered fit without pressing reset.
+- Resize while fitted, cursor-centered zoom and retaining a user's zoom.
+- Verteron selection, an actual area drag, profile creation, enlarged editor
+  and byte-identical tracking terrain; exact database typing without icons.
+- Clicking adjacent different-type resources retains the correct ID/type.
+- Empty-route image/JSON export still includes filtered resource glyphs.
+- Developer settings reveal/hide database, catalog and icon controls.
+- Picture import/crop/manual and learned-icon typing with Developer mode off,
+  and separate saved-zone lists, preserving
+  previous profiles and routes; cropping an interactive zone keeps its origin.
+- Hiding/reopening through the bottom-right launcher restores child windows,
+  including repeated hide calls; dragging/resetting persists its position.
+- Disabling the launcher uses the taskbar path, restores child windows and
+  saves startup preferences; profiles reopen with their correct source.
+- Safe shutdown waits for the tracking worker.
+
+The same GUI script passes against the extracted public source ZIP. Map,
+editor, controller and launcher screenshots were visually inspected.
+Bundled --self-test passes without screen capture or user data, checking
+both real worlds and temporary profile/map/preferences round trips.
+Public packaging is checked for complete allowlisted files and SHA-256
+member hashes. Code compiles.
+
+RELEASE CONTENTS AND LIMITS
+The source package includes code/docs, two explicitly configured worlds,
+original glyphs/Welcome assets and dependency/runtime notices. Personal
+profiles, prompts, routes, screenshots, learned icons, raw upstream database
+exports and upstream JavaScript are excluded. The original copyright notice
+is retained; third-party map artwork/data keep their original rights.
+
+Runtime/build dependency locks and the existing pinned GitHub workflow are
+retained. No dependency update or fresh advisory audit was part of RC6.
+No Windows EXE was compiled here. BUILD.cmd and the GitHub Windows workflow
+build the unsigned installer and portable application. Before publishing,
+check clean-account install/upgrade, live game tracking/focus, launcher
+activation, minimized/moved windows, multiple monitors and DPI on Windows.
+See RELEASE.txt.

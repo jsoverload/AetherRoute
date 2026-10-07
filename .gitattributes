@@ -1,0 +1,2 @@
+# Map checksums cover exact bytes. Keep the packaged LF endings on Windows.
+maps/*.map.json text eol=lf

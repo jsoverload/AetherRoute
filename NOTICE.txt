@@ -1,0 +1,14 @@
+AetherRoute application code and original UI/glyphs are covered by the MIT
+license in LICENSE.txt. The prior Wayveil copyright notice is retained.
+Third-party components keep their own licenses. Retain THIRD_PARTY_LICENSES
+and runtime notices when redistributing the application.
+
+This release includes the supplied Altgard and Verteron terrain images and
+resource/region coordinates to make the map browser ready to use. These
+are third-party game/map materials, not MIT application artwork or data.
+See maps/NOTICE.txt. Private profiles, screenshots, routes, prompts and
+learned icon samples are excluded from public release packaging.
+
+Aion 2, NCSoft and Questlog are external products. AetherRoute is an
+independent project, formerly Wayveil, with no represented affiliation or
+endorsement. Its license does not grant rights to third-party materials.

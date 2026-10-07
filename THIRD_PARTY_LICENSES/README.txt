@@ -1,0 +1,1 @@
+Dependency notices from the pinned source-release environment. Runtime wheels install their own platform notices. BUILD.cmd recollects the installed Windows notices for the executable. Retain these notices when redistributing.

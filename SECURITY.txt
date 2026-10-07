@@ -1,0 +1,51 @@
+AETHERROUTE — LOCAL DATA AND SHARING
+
+The app tracks visible terrain locally using Windows window geometry,
+foreground/key state and screen capture. It does not inject into game
+processes, read game memory, simulate game input or automate collection.
+Big-map routes hide while moving if enabled. Minimap routes stay inside
+the selected map area. Use Windowed or Borderless mode.
+
+There is no telemetry, embedded web page, automatic update or automatic
+model request.
+First-time source dependency installation and Windows build dependency
+installation access the configured package repositories.
+
+INCLUDED AND CUSTOM MAPS
+Altgard and Verteron are packaged with preconfigured bounds and coordinates.
+Built-in files are checked against the packaged SHA-256 index; this detects
+incomplete or altered files, not publisher authenticity. The application
+cannot delete or edit included worlds. Developer mode exposes custom map
+imports and bounds. Custom entries and profiles stay under your account.
+Map imports do not execute code or JavaScript. Limits apply to JSON bytes,
+pixels, markers, regions, coordinates and IDs. Missing bounds cannot
+produce positioned resources. Explicit pack exports share terrain and data.
+
+LOCAL DATA
+%LOCALAPPDATA%\Aion2RouteSync keeps profiles, images, backups, custom worlds,
+learned icon samples and app-settings.json. The historical name preserves
+upgrades. Custom model prompts/tasks stay local until you export a model
+pack. Backups can contain older names, routes and prompts. Data is ordinary
+local storage, not encryption. No credentials are required; avoid putting
+passwords or API keys in names or prompts.
+
+SHARING
+Profile exports include the visible map, names, resource locations and saved
+routes. They omit model prompts/tasks, application preferences, unknown
+metadata and hidden image EXIF/ICC/comments. Route exports include the
+route and stops. Model packs intentionally include your chosen prompt,
+annotated map and task for you to give to your own model. Learned icons
+are local and excluded from profile exports.
+
+FILE HANDLING
+JSON limits, duplicate-key/non-finite rejection, nesting limits and strict
+reference/coordinate validation protect imports. Saves replace atomically
+and retain a backup. A damaged main save can recover without resetting the
+store. A second instance is blocked from the same data folder. Quit stops
+if saving fails. Error dialogs omit raw exceptions and personal paths.
+
+Public packaging uses an explicit source/asset allowlist, not the workspace
+contents. It includes only the two configured public worlds, generated
+Welcome assets, source/docs and dependency notices. Personal user data,
+recordings, screenshots, model prompts, icon samples and original upstream
+JavaScript are excluded. See VALIDATION.txt and RELEASE.txt for checks.
