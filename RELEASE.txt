@@ -23,6 +23,13 @@ SHA-256 values in maps/index.json before the EXE build runs. The map data
 and integrity checks are retained. Generated source releases include this
 rule so the next GitHub upload keeps the fix.
 
+The bundle privacy audit checks local/self-hosted home paths and exact source
+and temporary build directories. On GitHub-hosted Actions only, the generic
+runneradmin home prefix is public CI metadata rather than the publisher's
+home; public Windows dependency wheels can already contain it. Other home
+paths and exact build directories are still rejected. Failures identify the
+relative shipped file and path category without logging the private path.
+
 WINDOWS UI
 The bottom-right launcher opens the main window. Closing the main window
 hides it; Quit exits. Before binding, it uses the desktop work area. After

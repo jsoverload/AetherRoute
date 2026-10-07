@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib
 import importlib.metadata as metadata
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -13,6 +14,36 @@ from package_release import members
 from product import NAME, VERSION
 
 ROOT=Path(__file__).resolve().parent
+
+def private_path_signatures(home,source,temporary,environment=None):
+    environment=os.environ if environment is None else environment
+    # This is GitHub's disposable hosted account, also present in public wheels
+    # (for example NumPy's Windows build metadata). It is not the publisher's
+    # account. Keep local/self-hosted home checks and exact build-path checks.
+    public_home=(environment.get('GITHUB_ACTIONS')=='true' and
+                 environment.get('RUNNER_ENVIRONMENT')=='github-hosted' and
+                 str(home).replace('\\','/').rstrip('/').lower()=='c:/users/runneradmin')
+    paths=[('source directory',source),('temporary build directory',temporary)]
+    if not public_home:paths.append(('user home',home))
+    result=[]
+    for label,path in paths:
+        value=str(path)
+        for variant in {value,value.replace('\\','/'),value.replace('\\','\\\\')}:
+            for encoding in ('utf-8','utf-16le'):
+                result.append((variant.encode(encoding),label))
+    return result
+
+def audit_bundle_paths(dist,home,source,temporary,environment=None):
+    signatures=private_path_signatures(home,source,temporary,environment)
+    for path in sorted(dist.rglob('*')):
+        if not path.is_file():continue
+        raw=path.read_bytes()
+        for secret,label in signatures:
+            if secret in raw:
+                # Diagnose the shipped file without logging the private path.
+                name=path.relative_to(dist).as_posix()
+                raise SystemExit('A personal build path was found in '+name+' ('+label+'). '
+                                 'Rebuild in a neutral directory before distribution.')
 
 def installer_compiler():
     configured=shutil.which('ISCC.exe')
@@ -70,11 +101,7 @@ def build():
         if not builder_notices:raise SystemExit('PyInstaller license notices are missing. Reinstall the pinned builder before distributing.')
         collect_runtime_notices(dist,stage)
         # Check personal build paths in every shipped file, including binaries.
-        private_paths={variant for p in (Path.home(),ROOT,Path(temporary)) for variant in (str(p),p.as_posix(),str(p).replace('\\','\\\\'))}
-        signatures=[p.encode(encoding) for p in private_paths for encoding in ('utf-8','utf-16le')]
-        for path in dist.rglob('*'):
-            if path.is_file() and any(secret in path.read_bytes() for secret in signatures):
-                raise SystemExit('A personal build path was found in the bundle. Rebuild in a neutral directory before distribution.')
+        audit_bundle_paths(dist,Path.home(),ROOT,Path(temporary))
         subprocess.run([str(dist/(NAME+'.exe')),'--self-test'],check=True,timeout=60,cwd=dist)
         (dist/'BUILD-INFO.json').write_text(json.dumps(dict(product=NAME,version=VERSION,python=sys.version.split()[0],pyinstaller=builder.version,signed=False),indent=2))
         hashes=''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.relative_to(dist).as_posix()+'\n' for p in sorted(dist.rglob('*')) if p.is_file())

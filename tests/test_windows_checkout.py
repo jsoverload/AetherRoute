@@ -12,8 +12,54 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from package_release import members
 from security import ValidationError
 from world_maps import built_in_maps, load_built_in
+from build_windows import audit_bundle_paths
 
 ROOT=Path(__file__).resolve().parents[1]
+
+class BundlePrivacyTests(unittest.TestCase):
+    HOSTED={'GITHUB_ACTIONS':'true','RUNNER_ENVIRONMENT':'github-hosted'}
+    HOME=r'C:\Users\runneradmin'
+    SOURCE=r'D:\a\AetherRoute\AetherRoute'
+    TEMP=r'C:\Users\RUNNER~1\AppData\Local\Temp\aetherroute-build-generated'
+
+    def audit(self,raw,environment,home=None):
+        with tempfile.TemporaryDirectory() as directory:
+            dist=Path(directory)
+            (dist/'runtime.dll').write_bytes(raw)
+            audit_bundle_paths(dist,home or self.HOME,self.SOURCE,self.TEMP,environment)
+
+    def test_public_hosted_runner_metadata_is_allowed(self):
+        # Public NumPy Windows wheels carry this generic upstream CI prefix.
+        self.audit((self.HOME+'/upstream-build').encode(),self.HOSTED)
+        self.audit(self.HOME.replace('\\','/').encode('utf-16le'),self.HOSTED)
+
+    def test_local_and_self_hosted_homes_remain_private(self):
+        for environment in ({},{'GITHUB_ACTIONS':'true','RUNNER_ENVIRONMENT':'self-hosted'}):
+            with self.subTest(environment=environment):
+                with self.assertRaisesRegex(SystemExit,'user home'):
+                    self.audit(self.HOME.encode(),environment)
+
+    def test_custom_home_is_private_even_on_hosted_ci(self):
+        home=r'C:\Users\private-publisher'
+        with self.assertRaisesRegex(SystemExit,'user home'):
+            self.audit(home.encode(),self.HOSTED,home)
+
+    def test_exact_workspace_and_temporary_paths_still_fail_on_hosted_ci(self):
+        for value in (self.SOURCE,self.TEMP):
+            for variant in (value,value.replace('\\','/'),value.replace('\\','\\\\')):
+                for encoding in ('utf-8','utf-16le'):
+                    with self.subTest(value=value,encoding=encoding):
+                        with self.assertRaisesRegex(SystemExit,'directory'):
+                            self.audit(variant.encode(encoding),self.HOSTED)
+
+    def test_failure_identifies_file_without_logging_the_private_path(self):
+        home=r'C:\Users\private-publisher'
+        with self.assertRaises(SystemExit) as raised:
+            self.audit(home.encode('utf-16le'),{},home)
+        message=str(raised.exception)
+        self.assertIn('runtime.dll',message)
+        self.assertIn('user home',message)
+        self.assertNotIn(home,message)
 
 class SourceReleaseTests(unittest.TestCase):
     def test_public_source_carries_the_checkout_rule_and_original_map_bytes(self):
