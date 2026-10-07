@@ -141,14 +141,6 @@ Open **Model planning**, choose **Draw path from image**, and click **Export mod
 
 The image includes selected catalog resources even if they are not yet part of a route. Import the model's response JSON to create a new editable route, then review its path. AetherRoute does not connect to a model automatically or require an API key.
 
-## Screenshots and OBS
-
-The capture controls are included starting with **v0.9.0-rc8**. See the [illustrated capture guide](TUTORIAL.md).
-
-- **Save overlay screenshot (5 seconds):** choose a PNG filename, return to the game, and keep the map still until the aligned route is captured.
-- **Start OBS recording mode (5 seconds):** use OBS **Display Capture**, return to the game and keep the map still. The aligned route freezes for recording. Press **Ctrl + Alt + R**, or reopen AetherRoute, to resume tracking.
-
-Stop recording mode before moving the map or your character. The main window and route editor can be recorded normally.
 
 <details>
 <summary>View the tool beside the game</summary>
